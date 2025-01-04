@@ -58,6 +58,8 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+// thunk function
+
 const fetchUsers = () => {
   return function (dispatch) {
     dispatch(fetchUsersRequest());
