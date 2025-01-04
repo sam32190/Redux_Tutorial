@@ -1,5 +1,8 @@
-const redux = require("reudx");
+const redux = require("redux");
+const { thunk } = require("redux-thunk");
+const axios = require("axios");
 const createStore = redux.createStore;
+const applyMiddleware = redux.applyMiddleware;
 
 const initialState = {
   loading: true,
@@ -55,4 +58,25 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-const store = createStore(reducer);
+const fetchUsers = () => {
+  return function (dispatch) {
+    dispatch(fetchUsersRequest());
+    axios
+      .get("https://jsonplaceholder.typicode.com/users")
+      .then((response) => {
+        // response data is the users
+        const users = response.data.map((user) => user.id);
+        dispatch(fetchUsersSuccess(users));
+      })
+      .catch((error) => {
+        // error.message is the error message
+        dispatch(fetchUsersFailure(error.message));
+      });
+  };
+};
+
+const store = createStore(reducer, applyMiddleware(thunk));
+
+store.subscribe(() => console.log(store.getState()));
+
+store.dispatch(fetchUsers());
