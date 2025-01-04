@@ -1,14 +1,19 @@
 const redux = require("redux");
+const createStore = redux.createStore;
 const bindActionCreators = redux.bindActionCreators;
 const combineReducers = redux.combineReducers;
-const createStore = redux.createStore;
+const applyMiddleware = redux.applyMiddleware;
+
+// using middleware
+const reduxLogger = require('redux-logger');
+const logger = reduxLogger.createLogger();
 
 // defining action.type
-const CAKE_ORDERED = 'CAKE_ORDERED';
-const CAKE_RESTOCKED = 'CAKE_RESTOCKED';
+const CAKE_ORDERED = "CAKE_ORDERED";
+const CAKE_RESTOCKED = "CAKE_RESTOCKED";
 
-const ICECREAM_ORDERED = 'ICECREAM_ORDERED';
-const ICECREAM_RESTOCKED = 'ICECREAM_RESTOCKED';
+const ICECREAM_ORDERED = "ICECREAM_ORDERED";
+const ICECREAM_RESTOCKED = "ICECREAM_RESTOCKED";
 
 // An action creator is a function which returns action as an object.
 function orderCake() {
@@ -94,15 +99,13 @@ const rootReducer = combineReducers({
 });
 
 // Step 1: Creating a store
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(logger));
 
 // Step 2: Accessing state
 console.log("Initial state", store.getState());
 
 // Step 4: subscribe
-const unsubscribe = store.subscribe(() =>
-  console.log("Update state ", store.getState())
-);
+const unsubscribe = store.subscribe(() => {});
 
 // store.dispatch(orderCake());
 // store.dispatch(orderCake());
